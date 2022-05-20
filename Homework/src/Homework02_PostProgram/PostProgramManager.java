@@ -6,7 +6,7 @@ public class PostProgramManager implements ConsoleProgram {
 	Scanner scan = new Scanner(System.in);
 	private int exitmenu = 5;
 	List<Post> posts = new ArrayList<Post>(); //게시판..
-	private String managerpw = "manager";
+	private String managerPw = "manager"; //공지글을 작성하기 위한 관리자 비밀번호 -> 게시글 비밀번호랑 다름
 	
 	//생성자
 	public PostProgramManager(Scanner scan) {
@@ -43,11 +43,13 @@ public class PostProgramManager implements ConsoleProgram {
 			  - 관리자가 입력하는 공지와 회원이 입력하는 일반 게시글이 구분
 			  - 공지글
 			  	- 관리자만 등록해야하기 때문에 관리자 비밀번호와 일치하면 게시글을 작성할 수 있도록 함
+			  	- 관리자 비밀번호와 제목과 내용만 입력
 			  	- 게시글 제목에 [공지]를 붙임
 			  	- 게시글 작성일은 자동으로 입력
-			  	- 아이디는 "Manager"로 자동 입력
-			  	- 제목, 내용은 공백이 포함/나머지는 공백 없이
+			  	- 아이디는 "Manager", 비밀번호는 "manager"로 자동 입력
+			  	- 제목, 내용은 공백이 포함/나머지는 공백 없이 작성
 			  - 일반 게시글
+			  	- 제목, 아이디, 비밀번호, 내용 입력
 			    - 게시글 제목에 [일반]을 붙임
 			    - 게시글 작성일은 자동으로 입력
 			    - 아이디, 비밀번호 입력 -> 비밀번호는 나중에 게시글 수정/삭제할 때 게시글을 작성한 회원만 수정가능하도록
@@ -124,7 +126,7 @@ public class PostProgramManager implements ConsoleProgram {
 			String pw = scan.next();
 			scan.nextLine();
 			//입력한 비밀번호가 관리자 비밀번호가 같다면
-			if(pw.equals(managerpw)) {
+			if(pw.equals(managerPw)) {
 				//게시글 작성..
 				System.out.println("게시글 제목을 입력하세요 : ");
 				String title = scan.nextLine();
