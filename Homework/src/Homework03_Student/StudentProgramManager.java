@@ -52,6 +52,11 @@ public class StudentProgramManager implements ConsoleProgram{
 			if(list.contains(new Student(grade, clazz, num))) {
 				System.out.println("동일한 학생정보가 있습니다");
 			}else { //없으면 성적 추가
+				//성적을 추가하기전에 성적을 추가하겠습니까하고 물은뒤 y를 입력하면 성적을
+				//입력받게 하고, 입력을 다 받으면 더 입력하겠습니까하고 물은 뒤 y를 입력하면
+				//성적을 추가로 입력, n이면 입력 종료를 해야 합니다.
+				//그리고 성적 입력 시 이미 입력된 과목(국어 1학년 1학기)는 이미 입력된 과목이라고 알려줘야합니다.
+				//그리고 성적이 입력될때마다 성적 리스트에 추가하고 입력 종료가 되면 성적 리스트를 학생에 추가해줍니다.
 				System.out.print("과목 학년 학기 : ");
 				String subject = scan.next();
 				int year = scan.nextInt();
@@ -83,8 +88,9 @@ public class StudentProgramManager implements ConsoleProgram{
 			grade = scan.nextInt();
 			clazz = scan.nextInt();
 			num = scan.nextInt();
-			//학년 반 번호가 일치하는 학생이 있으면 추가할 성적 입력
+			//학년 반 번호가 일치하는 학생이 있으면 추가할 성적 입력. 성적은 여러번 입력받을 수 있게 반복문을 활용해야함.
 			if(list.contains(new Student(grade, clazz, num))) {
+				//추가하는 과정에서 이미 등록된 과목인지 체크를 해야합니다.
 				int index = list.indexOf(new Student(grade, clazz, num));
 				System.out.println(list.get(index).getName() + " 학생의 성적을 추가합니다");
 				System.out.println("추가할 성적을 입력하세요");
@@ -99,6 +105,8 @@ public class StudentProgramManager implements ConsoleProgram{
 				int pA = scan.nextInt();subject = scan.next();
 				
 				//성적 추가....막힌다...
+				//입력 받은 값을 이용하여 Mark 객체를 생성 한 후
+				//검색한 학생 정보에서 성적 리스트를 가져온 후 성적 리스트에 Mark 객체를 추가합니다.
 			}else {
 				System.out.println("해당 학생은 찾을 수 없습니다");
 			}
