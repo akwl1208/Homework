@@ -1,4 +1,4 @@
-package Homework02_PostProgram;
+package homework02_PostProgram;
 
 import java.util.*;
 //익명 게시판

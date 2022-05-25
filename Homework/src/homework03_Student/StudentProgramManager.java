@@ -1,8 +1,8 @@
-package Homework03_Student;
+package homework03_Student;
 
 import java.util.*;
 
-import Homework02_PostProgram.ConsoleProgram;
+import homework02_PostProgram.ConsoleProgram;
 
 public class StudentProgramManager implements ConsoleProgram{
 	Scanner scan = new Scanner(System.in);

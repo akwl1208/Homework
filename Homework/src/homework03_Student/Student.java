@@ -1,4 +1,4 @@
-package Homework03_Student;
+package homework03_Student;
 
 import java.util.*;
 
@@ -112,10 +112,32 @@ class Mark {
 		return  "\n" + year + "학년 " + semester + "학기 | " + subject + " | " 
 				+ "중간 : " + midterm + "점 | 기말 : " + finals + "점 | 수행평가 : " + pA + "점\n";
 	}//
-	
-	
-	//equals를 오버라이딩 해야합니다. 과목, 학년, 학기가 같은 과목은 여러개 들어가면 안되기 때문에
+
+	//<선생님 코멘트>equals를 오버라이딩 해야합니다. 과목, 학년, 학기가 같은 과목은 여러개 들어가면 안되기 때문에
 	//중복체크를 해줘야해요.
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Mark other = (Mark) obj;
+		if (semester != other.semester)
+			return false;
+		if (subject == null) {
+			if (other.subject != null)
+				return false;
+		} else if (!subject.equals(other.subject))
+			return false;
+		if (year != other.year)
+			return false;
+		return true;
+	}
+	
+	
+	
 	
 	
 
