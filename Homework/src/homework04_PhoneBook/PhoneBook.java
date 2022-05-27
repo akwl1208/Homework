@@ -53,7 +53,7 @@ public class PhoneBook {
 			while(it.hasNext()) {
 				name = it.next();
 				String number = pb.get(name);
-				System.out.println(new Person(name, number));
+				System.out.println(name + " | " + number);
 			}
 			break;
 			
@@ -61,13 +61,18 @@ public class PhoneBook {
 			System.out.print("이름 : ");
 			name = scan.next();
 			//이름이 있으면 전화번호 출력
+			/* 
 			if(pb.containsKey(name)) {
 				System.out.println(pb.get(name));	
+			}*/
+			//위의 코드를 좀 더 효율적으로
+			String str = pb.get(name);
+			if(str != null) {
+				System.out.println("번호 : " + str);
 			}else {
 				System.out.println("전화번호가 등록되지 않은 사람입니다");
 			}
 			break;
-			
 		case 4: System.out.println("프로그램을 종료합니다");
 			break;
 			
@@ -78,7 +83,7 @@ public class PhoneBook {
 	}
 
 }
-
+/*성적확인에서 toString 때문에 클래스를 만들었는데 굳이 안만들고 위에서 꾸며줘도 됨
 class Person{
 	String name, number;
 
@@ -92,4 +97,4 @@ class Person{
 		return name + " | " + number;
 	}	
 }
-
+*/
