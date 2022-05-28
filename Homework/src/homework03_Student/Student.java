@@ -1,5 +1,6 @@
 package homework03_Student;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Student {
@@ -31,21 +32,7 @@ public class Student {
 		this.num = num;
 		this.name = name;
 	}//
-	//생성자	
-	public Student(int grade) {
-		setGrade(grade);
-	}//
-	//생성자
-		public Student(int grade, int clazz) {
-			setGrade(grade);
-			this.clazz = clazz;
-		}//
 
-	//성적 추가
-	public void addMarks(List<Mark> marks) {
-		setMarks(marks);
-	}
-	
 	//toString
 	@Override
 	public String toString() {
@@ -82,10 +69,6 @@ public class Student {
 	
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public List<Mark> getMarks() {
@@ -146,10 +129,11 @@ class Mark {
 		setFinals(finals);
 		setpA(pA);
 	}
+	
 	//toString
 	@Override
 	public String toString() {
-		return  "\n" + year + "학년 " + semester + "학기 | " + subject + " [ " 
+		return  "\n" + year + "학년 " + semester + "학기 | " + subject + " [" 
 				+ "중간 : " + midterm + "점 | 기말 : " + finals + "점 | 수행평가 : " + pA + "점]\n";
 	}//
 
