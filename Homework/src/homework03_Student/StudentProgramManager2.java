@@ -228,7 +228,7 @@ public class StudentProgramManager2 implements ConsoleProgram{
 		case 2: //학년별 학생 정보		
 			System.out.print("학생 정보를 보고 싶은 학년 입력 : ");
 			int grade = scan.nextInt();
-			if(list.contains(new Student(grade))) {
+			/*if(list.contains(new Student(grade))) {
 				//총점과 평균 계산을 위해 성적을 임시 저장 
 				List<Mark> tmp = new ArrayList<Mark>();	
 				for(int i = 0; i < list.size(); i++) {
@@ -241,13 +241,13 @@ public class StudentProgramManager2 implements ConsoleProgram{
 				//총점과 평균 출력
 				printSumAvg(tmp); //기능6
 			}else
-				printMessage("등록된 학생 정보가 없습니다. 학생 정보 등록해주세요");
+				printMessage("등록된 학생 정보가 없습니다. 학생 정보 등록해주세요");*/		
 			break;
 		case 3: //반별 학생 정보
 			System.out.print("학생 정보를 보고 싶은 학년 반 입력 : ");
 			grade = scan.nextInt();
 			int clazz = scan.nextInt();
-			if(list.contains(new Student(grade, clazz))){
+			/*if(list.contains(new Student(grade, clazz))){
 				List<Mark> tmp = new ArrayList<Mark>();
 				for(int i = 0; i < list.size(); i++) {
 					if(list.get(i).getGrade() == grade && list.get(i).getClazz() == clazz){
@@ -259,7 +259,7 @@ public class StudentProgramManager2 implements ConsoleProgram{
 				System.out.println("[" + grade + "학년 " + clazz + "반]");
 				printSumAvg(tmp); //기능6
 			}else
-				printMessage("등록된 학생 정보가 없습니다. 학생 정보 등록해주세요");
+				printMessage("등록된 학생 정보가 없습니다. 학생 정보 등록해주세요");*/
 			break;
 		case 4: //학생별 
 			int index = findIndex(); //기능3
