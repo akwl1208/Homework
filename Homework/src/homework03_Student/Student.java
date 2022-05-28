@@ -12,19 +12,39 @@ public class Student {
 	
 	//생성자
 	public Student(int grade, int clazz, int num, String name, List<Mark> marks) {
-		this.grade = grade;
+		setGrade(grade);
 		this.clazz = clazz;
 		this.num = num;
 		this.name = name;
 		this.marks = marks;
 	}//
-	
 	//생성자 -> 학년 반 번호로 학생을 찾기 위해
 	public Student(int grade, int clazz, int num) {
-		this.grade = grade;
+		setGrade(grade);
 		this.clazz = clazz;
 		this.num = num;
 	}//
+	//생성자
+	public Student(int grade, int clazz, int num, String name) {
+		setGrade(grade);
+		this.clazz = clazz;
+		this.num = num;
+		this.name = name;
+	}//
+	//생성자	
+	public Student(int grade) {
+		setGrade(grade);
+	}//
+	//생성자
+		public Student(int grade, int clazz) {
+			setGrade(grade);
+			this.clazz = clazz;
+		}//
+
+	//성적 추가
+	public void addMarks(List<Mark> marks) {
+		setMarks(marks);
+	}
 	
 	//toString
 	@Override
@@ -39,6 +59,8 @@ public class Student {
 	}
 
 	public void setGrade(int grade) {
+		if(grade < 1 || grade > 3)
+			throw new RuntimeException("학년은 1~3 사이의 정수 입력"); 
 		this.grade = grade;
 	}
 
@@ -48,6 +70,14 @@ public class Student {
 
 	public void setClazz(int clazz) {
 		this.clazz = clazz;
+	}
+	
+	public int getNum() {
+		return num;
+	}
+
+	public void setNum(int num) {
+		this.num = num;
 	}
 	
 	public String getName() {
@@ -88,33 +118,42 @@ public class Student {
 }
 
 class Mark {
-	//필드: 과목, 학년, 학기, 중간, 기말, 수행
-	String subject;
-	int year; //학년
-	int semester; //1학기, 2학기
-	int midterm; //중간고사
-	int finals; //기말고사
-	int pA; //수행평가 -> performance Assessment
+	//필드
+	private int year, semester; //학년, 학기
+	private String subject; //과목
+	private int midterm, finals, pA; //중간고사, 기말고사, 수행평가
 	
 	//생성자
-	public Mark(String subject, int year, int semester, int midterm, int finals, int pA) {
+	public Mark(int year, int semester, String subject, int midterm, int finals, int pA) {
+		setYear(year);
+		setSemester(semester);
 		this.subject = subject;
-		this.year = year;
-		this.semester = semester;
-		this.midterm = midterm;
-		this.finals = finals;
-		this.pA = pA;
+		setMidterm(midterm);
+		setFinals(finals);
+		setpA(pA);
+	}//
+	
+	//생성자 -> 학년 학기 과목으로 값 비교할 때
+	public Mark(int year, int semester, String subject) {
+		setYear(year);
+		setSemester(semester);
+		this.subject = subject;
 	}//
 
+	//성적 수정
+	public void modifyMark(int midterm, int finals, int pA) {
+		setMidterm(midterm);
+		setFinals(finals);
+		setpA(pA);
+	}
 	//toString
 	@Override
 	public String toString() {
-		return  "\n" + year + "학년 " + semester + "학기 | " + subject + " | " 
-				+ "중간 : " + midterm + "점 | 기말 : " + finals + "점 | 수행평가 : " + pA + "점\n";
+		return  "\n" + year + "학년 " + semester + "학기 | " + subject + " [ " 
+				+ "중간 : " + midterm + "점 | 기말 : " + finals + "점 | 수행평가 : " + pA + "점]\n";
 	}//
 
-	//<선생님 코멘트>equals를 오버라이딩 해야합니다. 과목, 학년, 학기가 같은 과목은 여러개 들어가면 안되기 때문에
-	//중복체크를 해줘야해요.
+	//equals
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -134,16 +173,66 @@ class Mark {
 		if (year != other.year)
 			return false;
 		return true;
+	}//
+	
+	//getter, setter
+	public int getYear() {
+		return year;
 	}
-	
-	
-	
-	
-	
 
-	
-	
-	
-	
+	public void setYear(int year) {
+		if(year < 1 || year > 3)
+			throw new RuntimeException("학년은 1~3 사이의 정수 입력"); 
+		this.year = year;
+	}
+
+	public int getSemester() {		
+		return semester;
+	}
+
+	public void setSemester(int semester) {
+		if(semester < 1 || semester > 2)
+			throw new RuntimeException("학기는 1 또는 2 입력");
+		this.semester = semester;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public int getMidterm() {
+		return midterm;
+	}
+
+	public void setMidterm(int midterm) {
+		if(midterm < 0 || midterm > 100)
+			throw new RuntimeException("점수는 0~100 사이 정수 입력");
+		this.midterm = midterm;
+	}
+
+	public int getFinals() {
+		return finals;
+	}
+
+	public void setFinals(int finals) {
+		if(finals < 0 || finals > 100)
+			throw new RuntimeException("점수는 0~100 사이 정수 입력");
+		this.finals = finals;
+	}
+
+	public int getpA() {
+		return pA;
+	}
+
+	public void setpA(int pA) {
+		if(pA < 0 || pA > 100)
+			throw new RuntimeException("점수는 0~100 사이 정수 입력");
+		this.pA = pA;
+	}
+
 }
 
