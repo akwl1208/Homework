@@ -158,12 +158,9 @@ public class StudentProgramManager implements ConsoleProgram{
 			List<Mark> marks = list.get(index).getMarks();
 			while(true) {
 				printMessage(list.get(index).getName() + " 학생의 성적을 추가합니다");
-				System.out.print("학년 학기 과목 : ");
-				int year = scan.nextInt();
-				int semester = scan.nextInt();
-				String subject = scan.next();
+				Mark tmp = inputMark();
 				//동일한 성적 정보가 있는지 확인 -> 있으면 동일한 성적 정보가 있다고 알려줌
-				if(marks.contains(new Mark(year, semester, subject)))
+				if(marks.contains(tmp))
 					printMessage("이미 등록된 성적 정보입니다");
 				else {//없으면 성적 입력
 					System.out.print("중간 기말 수행평가 : ");
@@ -171,7 +168,8 @@ public class StudentProgramManager implements ConsoleProgram{
 					int finals = scan.nextInt();
 					int pA = scan.nextInt();
 					//성적 리스트에 저장
-					marks.add(new Mark(year, semester, subject, midterm, finals, pA));
+					tmp.modifyMark(midterm, finals, pA);
+					marks.add(tmp);
 					//학년 학기 과목 순으로 오름차순 정렬
 					marks.sort(new Comparator<Mark>(){
 						@Override
@@ -184,13 +182,14 @@ public class StudentProgramManager implements ConsoleProgram{
 						}
 					});
 					//학생리스트에 추가
-					list.get(index).addMarks(marks);
+					//marks가 학생 리스트에서 해당 학생 성적 리스트를 의미하기 때문에 다시 설정할 필요가 없습니다.
+					//list.get(index).addMarks(marks);
 					printMessage("성적이 추가되었습니다");
 				}
 				//성적 더 추가할지 묻고 아니면 메뉴로 돌아가기
 				System.out.print("성적을 더 추가하려면 1, 메뉴로 돌아가려면 아무키나 누르세요 : ");
-				String ok = scan.next();
-				if(!ok.equals("1")) 
+				//String ok = scan.next();
+				if(!scan.next().equals("1")) 
 					break;
 			}	
 		}else //없으면 학생 정보가 없다고 알려주기 
@@ -277,6 +276,10 @@ public class StudentProgramManager implements ConsoleProgram{
 	}
 	
 	//기능6) 총점과 평균 계산해서 출력 
+	//학생 총점을 학생 학년, 학기 별 총점과 평균으로 하면 어떨까요?
+	//학생 학년, 학기별 총점과 평균을 학생 클래스에 멤버로 관리하면 어떨까요?
+	//지금한게 잘못된건 아닌데, 학생 객체에 성적이 추가될때마다 자동으로 계산하면 지금처럼
+	//외부에서 따로 계산할 필요가 없을거 같은데 생각해보세요.
 	private void printSumAvg(List<Mark> tmp) {
 		//총점 출력
 		int count = 0; //과목 수
@@ -318,7 +321,7 @@ public class StudentProgramManager implements ConsoleProgram{
 				//성적 수정
 				marks.get(markIndex).modifyMark(midterm, finals, pA);
 				//학생 리스트 수정
-				list.get(index).setMarks(marks);
+				//list.get(index).setMarks(marks);
 				printMessage("성적이 수정되었습니다");
 			}else
 				printMessage("등록되지 않은 성적입니다");
@@ -328,11 +331,7 @@ public class StudentProgramManager implements ConsoleProgram{
 	
 	//기능8) 학년 학기 과목을 입력받아 markIndex 찾기
 	private int findmarkIndex(List<Mark> marks) {
-		System.out.print("학년 학기 과목 : ");
-		int year = scan.nextInt();
-		int semester = scan.nextInt();
-		String subject = scan.next();
-		return marks.indexOf(new Mark(year, semester, subject));
+		return marks.indexOf(inputMark());
 	}//findmarkIndex
 	
 	//기능9) 성적 삭제
@@ -346,13 +345,11 @@ public class StudentProgramManager implements ConsoleProgram{
 			List<Mark> marks = list.get(index).getMarks();
 			printMessage(list.get(index).getName() + " 학생의 성적을 삭제합니다");
 			//학년 학기 과목 입력 후 markIndex 찾기
-			int markIndex = findmarkIndex(marks); //기능8
+			//int markIndex = findmarkIndex(marks); //기능8
 			//동일한 성적 정보가 있는지 확인 -> 있으면 성적 삭제
-			if(markIndex >= 0) {
-				//성적 삭제
-				marks.remove(markIndex);
-				//학생 리스트 수정
-				list.get(index).setMarks(marks);
+			//remove 메소드가 번지가 매개변수일수도 있고, 성적 객체일 수도 있습니다.
+			//객체를 생성하여 바로 remove하면 성공하면 true를 리턴, 실패하면 false를 리턴합니다.
+			if(marks.remove(inputMark())) {
 				printMessage("성적이 삭제되었습니다");
 			}else
 				printMessage("등록되지 않은 성적입니다");
@@ -384,4 +381,12 @@ public class StudentProgramManager implements ConsoleProgram{
 		}else //없으면 학생 정보가 없다고 알려주기 
 			printMessage("등록된 학생 정보가 없습니다. 학생 정보 등록해주세요");
 	}//deleteStudent
+	
+	private Mark inputMark() {
+		System.out.print("학년 학기 과목 : ");
+		int year = scan.nextInt();
+		int semester = scan.nextInt();
+		String subject = scan.next();
+		return new Mark(year, semester, subject);
+	}
 }
