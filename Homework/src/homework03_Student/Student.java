@@ -1,7 +1,7 @@
 package homework03_Student;
 
-import java.text.DecimalFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Student {
 	//필드
@@ -10,7 +10,7 @@ public class Student {
 	private int num;
 	private String name;
 	List<Mark> marks = new ArrayList<Mark>(); //학생의 성적
-	
+	List<Record> records = new ArrayList<Record>();//학생의 학년, 학기별 평균 및 총점들을 관리
 	//생성자
 	public Student(int grade, int clazz, int num, String name, List<Mark> marks) {
 		setGrade(grade);
@@ -18,6 +18,7 @@ public class Student {
 		this.num = num;
 		this.name = name;
 		this.marks = marks;
+		calculateRecord();
 	}//
 	//생성자 -> 학년 반 번호로 학생을 찾기 위해
 	public Student(int grade, int clazz, int num) {
@@ -77,6 +78,7 @@ public class Student {
 
 	public void setMarks(List<Mark> marks) {
 		this.marks = marks;
+		calculateRecord();
 	}//
 
 	//equals
@@ -97,9 +99,21 @@ public class Student {
 			return false;
 		return true;
 	}
+	//성적 리스트 marks에서 성적들을 이용하여 기록(학년, 학기에 따른 성적) 리스트 records에 평균을 계산하는 메소드
+	public void calculateRecord() {
+		
+	}
 	
 }
-
+//학년, 학기별 평균, 총점(앤 주용하진 않지만)을 구하는 클래스
+class Record{
+	int year;
+	int semester;
+	int sum;//총점
+	int subjectCount;//과목 수
+	double avg;//평균
+	
+}
 class Mark {
 	//필드
 	private int year, semester; //학년, 학기
@@ -217,6 +231,5 @@ class Mark {
 			throw new RuntimeException("점수는 0~100 사이 정수 입력");
 		this.pA = pA;
 	}
-
 }
 
