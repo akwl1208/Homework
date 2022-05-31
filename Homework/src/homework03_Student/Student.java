@@ -1,5 +1,6 @@
 package homework03_Student;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,35 @@ public class Student {
 		this.num = num;
 		this.name = name;
 	}//
-
+	//기본 생성자
+	public Student() {}//
+	//생성자
+	public Student(List<Mark> t) {
+		this.marks = t;
+		calculateRecord();
+	}//
+	
+	//성적 리스트 marks에서 성적들을 이용하여 기록(학년, 학기에 따른 성적) 리스트 records에 평균을 계산하는 메소드
+	public void calculateRecord() {
+		for(int i = 1; i <=3; i++) { //학년
+			for(int j = 1; j <= 2; j++) { //학기
+				int subjectCount = 0; //과목수
+				double sum = 0, avg = 0; //총점과 평균
+				for(int k = 0; k < marks.size(); k++) {
+					Mark tmp = marks.get(k);
+					if(tmp.getYear() == i && tmp.getSemester() == j) {
+						sum += (tmp.getMidterm() + tmp.getFinals())*0.4 + tmp.getpA()*0.2;
+						subjectCount++;
+						avg = sum/subjectCount ;	
+					}
+				}	
+				if(subjectCount == 0) //NaN 예외처리
+					avg = 0;
+				records.add(new Record(i, j, sum, subjectCount, avg));
+			}
+		}
+	}//
+	
 	//toString
 	@Override
 	public String toString() {
@@ -79,7 +108,12 @@ public class Student {
 	public void setMarks(List<Mark> marks) {
 		this.marks = marks;
 		calculateRecord();
-	}//
+	}
+	
+	public List<Record> getRecords() {
+		return records;
+	}
+	//
 
 	//equals
 	@Override
@@ -99,21 +133,36 @@ public class Student {
 			return false;
 		return true;
 	}
-	//성적 리스트 marks에서 성적들을 이용하여 기록(학년, 학기에 따른 성적) 리스트 records에 평균을 계산하는 메소드
-	public void calculateRecord() {
-		
-	}
-	
-}
+
+}//class Student
+
 //학년, 학기별 평균, 총점(앤 주용하진 않지만)을 구하는 클래스
-class Record{
+class Record {
 	int year;
 	int semester;
-	int sum;//총점
+	double sum;//총점
 	int subjectCount;//과목 수
 	double avg;//평균
 	
-}
+	//생성자
+	public Record(int year, int semester, double sum, int subjectCount, double avg) {
+		this.year = year;
+		this.semester = semester;
+		this.sum = sum;
+		this.subjectCount = subjectCount;
+		this.avg = avg;
+	}//
+	
+	//toString
+	@Override
+	public String toString() {
+		DecimalFormat df = new DecimalFormat("#0.0");
+		return year + "학년 " + semester + "학기 총점 : " + df.format(sum) + "점, 평균 : " + df.format(avg) + "점\n";
+	}//	
+
+}//class Record
+
+//성적을 관리하는 클래스
 class Mark {
 	//필드
 	private int year, semester; //학년, 학기
@@ -231,5 +280,5 @@ class Mark {
 			throw new RuntimeException("점수는 0~100 사이 정수 입력");
 		this.pA = pA;
 	}
-}
+}//class Mark
 
