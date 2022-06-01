@@ -18,8 +18,9 @@ public class Student {
 		this.clazz = clazz;
 		this.num = num;
 		this.name = name;
-		this.marks = marks;
-		calculateRecord();
+		//this.marks = marks;
+		//calculateRecord();
+		setMarks(marks);
 	}//
 	//생성자 -> 학년 반 번호로 학생을 찾기 위해
 	public Student(int grade, int clazz, int num) {
@@ -38,8 +39,9 @@ public class Student {
 	public Student() {}//
 	//생성자
 	public Student(List<Mark> t) {
-		this.marks = t;
-		calculateRecord();
+		//this.marks = t;
+		//calculateRecord();
+		setMarks(t);//setMarks에 calculateRecord()를 호출하기 때문에
 	}//
 	
 	//성적 리스트 marks에서 성적들을 이용하여 기록(학년, 학기에 따른 성적) 리스트 records에 평균을 계산하는 메소드

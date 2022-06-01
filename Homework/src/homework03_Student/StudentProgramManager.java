@@ -371,7 +371,7 @@ public class StudentProgramManager implements ConsoleProgram{
 		*/
 		
 		//방법2) 임시 학생 리스트를 만들고 학생 성적만 따로 다 성적 리스트에 담아서 학생클래스에 있는 메소드로 자동계산..
-		List<Student> std = new ArrayList<Student>(); //임시 학생 리스트 생성
+		/*List<Student> std = new ArrayList<Student>(); //임시 학생 리스트 생성
 		List<Mark> m = new ArrayList<Mark>(); //임시 성적 리스트 생성
 		for(int j = 0; j < tmp.size(); j++) {		
 			for(int i = 0; i < tmp.get(j).getMarks().size(); i++) {			
@@ -379,6 +379,14 @@ public class StudentProgramManager implements ConsoleProgram{
 			}
 		}
 		std.add(new Student(m)); //성적 리스트를 학생 리스트에 담음
-		System.out.println(std.get(0).getRecords());
+		System.out.println(std.get(0).getRecords());*/
+		for(int i = 0; i<tmp.size(); i++) {
+			System.out.println(tmp.get(i));
+			for(int j = 0; j<tmp.get(i).getRecords().size(); j++) {
+				//점수가 있는 학기만 학기 평균을 출력
+				if(tmp.get(i).getRecords().get(j).sum != 0)
+					System.out.println(tmp.get(i).getRecords().get(j));
+			}
+		}
 	}//printMarkList
 }
