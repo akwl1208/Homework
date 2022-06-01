@@ -12,14 +12,13 @@ public class Student {
 	private String name;
 	List<Mark> marks = new ArrayList<Mark>(); //학생의 성적
 	List<Record> records = new ArrayList<Record>();//학생의 학년, 학기별 평균 및 총점들을 관리
+	
 	//생성자
 	public Student(int grade, int clazz, int num, String name, List<Mark> marks) {
 		setGrade(grade);
 		this.clazz = clazz;
 		this.num = num;
 		this.name = name;
-		//this.marks = marks;
-		//calculateRecord();
 		setMarks(marks);
 	}//
 	//생성자 -> 학년 반 번호로 학생을 찾기 위해
@@ -39,8 +38,6 @@ public class Student {
 	public Student() {}//
 	//생성자
 	public Student(List<Mark> t) {
-		//this.marks = t;
-		//calculateRecord();
 		setMarks(t);//setMarks에 calculateRecord()를 호출하기 때문에
 	}//
 	
@@ -135,7 +132,6 @@ public class Student {
 			return false;
 		return true;
 	}
-
 }//class Student
 
 //학년, 학기별 평균, 총점(앤 주용하진 않지만)을 구하는 클래스
@@ -161,7 +157,6 @@ class Record {
 		DecimalFormat df = new DecimalFormat("#0.0");
 		return year + "학년 " + semester + "학기 총점 : " + df.format(sum) + "점, 평균 : " + df.format(avg) + "점\n";
 	}//	
-
 }//class Record
 
 //성적을 관리하는 클래스
