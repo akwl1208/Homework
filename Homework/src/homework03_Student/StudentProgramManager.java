@@ -340,7 +340,7 @@ public class StudentProgramManager implements ConsoleProgram{
 		else {
 			for(Student tmp : tmpList) {
 				System.out.println(tmp);
-			}
+			} //이건 기능12에서 방법1할 때 필요
 			System.out.println("***********************");
 			printMarkList(tmpList); //기능12
 			System.out.println("***********************");
@@ -348,30 +348,9 @@ public class StudentProgramManager implements ConsoleProgram{
 	}//printStudentList
 	
 	//기능12) 학생들의 학년 학기별 성적을 계산하고 출력
-	private void printMarkList(List<Student> tmp) {
-		/*
-		//방법1) record 리스르를 생성 후, 각각 학생의 record에 저장된 순서대로 sum과 과목수를 더해서 다시 평균을 낸다..
-		//	-> 다시 계산식을 중복....record 클래스에 기본생성자랑 getter setter도 만들어야 함
-		List<Record> r = new ArrayList<Record>();
-		for(int j = 0; j < 6; j++) {		
-			Record tmp = new Record();
-			double sum = 0, avg = 0;
-			int count = 0;
-			for(int i = 0; i < std.size(); i++) {			
-				tmp = std.get(i).getRecords().get(j);			
-				sum += tmp.getSum();
-				count += tmp.getSubjectCount();		
-			}
-			avg = sum/count;
-			if (count == 0)
-				avg = 0;					
-			r.add(new Record(tmp.getYear(), tmp.getSemester(), sum, count, avg));
-		}
-		System.out.println(r);
-		*/
-		
-		//방법2) 임시 학생 리스트를 만들고 학생 성적만 따로 다 성적 리스트에 담아서 학생클래스에 있는 메소드로 자동계산..
-		/*List<Student> std = new ArrayList<Student>(); //임시 학생 리스트 생성
+	private void printMarkList(List<Student> tmp) {	
+		//방법1) 전체 학년별 반별 학생별 학생들의 성적의 총점과 평균 계산
+		List<Student> std = new ArrayList<Student>(); //임시 학생 리스트 생성
 		List<Mark> m = new ArrayList<Mark>(); //임시 성적 리스트 생성
 		for(int j = 0; j < tmp.size(); j++) {		
 			for(int i = 0; i < tmp.get(j).getMarks().size(); i++) {			
@@ -379,14 +358,15 @@ public class StudentProgramManager implements ConsoleProgram{
 			}
 		}
 		std.add(new Student(m)); //성적 리스트를 학생 리스트에 담음
-		System.out.println(std.get(0).getRecords());*/
-		for(int i = 0; i<tmp.size(); i++) {
+		System.out.println(std.get(0).getRecords());
+		
+		//방법2_ 각각 학생의 성적을 출력하고 점수가 있는 학기만 학기 총점과 평균을 출력
+		/*for(int i = 0; i<tmp.size(); i++) {
 			System.out.println(tmp.get(i));
-			for(int j = 0; j<tmp.get(i).getRecords().size(); j++) {
-				//점수가 있는 학기만 학기 평균을 출력
+			for(int j = 0; j<tmp.get(i).getRecords().size(); j++) {		
 				if(tmp.get(i).getRecords().get(j).sum != 0)
 					System.out.println(tmp.get(i).getRecords().get(j));
 			}
-		}
+		}*/
 	}//printMarkList
 }
