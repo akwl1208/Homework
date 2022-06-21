@@ -460,9 +460,9 @@ public class OnlineshopManager implements ConsoleProgram {
 							System.out.println("***********************");
 							System.out.println("제품명 : " + p.getName());
 							for(int k = 0; k < p.getOption().size(); k++) {
-							System.out.print("옵션 " + (k+1) + " : "); //수량이 0인 옵션은 품절이라고 보여준다
-							List<Option> o = p.getOption(); //제품의 옵션들 임시 저장
-							System.out.println(o.get(k).getAmount() > 0?o.get(k):o.get(k).getColor() + "|" + o.get(k).getSize() + "|품절");
+								System.out.print("옵션 " + (k+1) + " : "); //수량이 0인 옵션은 품절이라고 보여준다
+								List<Option> o = p.getOption(); //제품의 옵션들 임시 저장
+								System.out.println(o.get(k).getAmount() > 0?o.get(k):o.get(k).getColor() + "|" + o.get(k).getSize() + "|품절");
 							}
 							System.out.println("가격 : " + p.getPrice());
 							System.out.println("***********************");
@@ -523,20 +523,24 @@ public class OnlineshopManager implements ConsoleProgram {
 									
 									//장바구니에 이미 담긴 제품인 경우 count가 1
 									if(count == 1) {
-										System.out.print("장바구니에 추가하겠습니까?[y/n] : ");
-										answer = scan.next().charAt(0);
-										if(answer == 'y') { //장바구니에 담는다고 한 경우
-											//장바구니 수정		
-											Product basket = m.getBasket().get(k);
-											Option basOpt = basket.getOption().get(z);
-											//옵션 수량 수정 = 기존 수량 + 구매 수량
-											basOpt.setAmount(basOpt.getAmount() + orderAmount);
-											//가격 수정
-											basket.setPrice(basket.getPrice() + orderAmount*p.getPrice());
-											printMessage(basket.getName() + "이(가) 장바구니에 담겼습니다");
-										}else if(answer == 'n') {
-											printMessage("y나 n을 입력하세요");
-										}
+										while(true){
+											System.out.print("장바구니에 추가하겠습니까?[y/n] : ");
+											answer = scan.next().charAt(0);
+											if(answer == 'y') { //장바구니에 담는다고 한 경우
+												//장바구니 수정		
+												Product basket = m.getBasket().get(k);
+												Option basOpt = basket.getOption().get(z);
+												//옵션 수량 수정 = 기존 수량 + 구매 수량
+												basOpt.setAmount(basOpt.getAmount() + orderAmount);
+												//가격 수정
+												basket.setPrice(basket.getPrice() + orderAmount*p.getPrice());
+												printMessage(basket.getName() + "이(가) 장바구니에 담겼습니다");
+											}else if(answer != 'n') {
+												printMessage("y나 n을 입력하세요");
+												continue;
+											}
+											break;
+										}//while 장바구니 추가할지 
 									}//if count == 1
 									//처음 장바구니에 담는 제품인 경우 count는 0
 									if(count == 0) {
@@ -574,16 +578,29 @@ public class OnlineshopManager implements ConsoleProgram {
 						break;
 					case 2: //장바구니 보기
 						List<Product> basket = m.getBasket(); 
-						for(Product tmp : basket) {
-							System.out.println(tmp);
+						int totalPrice = 0;
+						for(int k = 0; k < basket.size(); k++) {
+							Product b = basket.get(k);
+							System.out.println(k+1 + ". " + b.getName() + " | " + b.getOption() + " | " + b.getPrice());
+							totalPrice += b.getPrice();
 						}
+						printMessage("총 결제 금액 : " + totalPrice);
+						
 						System.out.println("*******장바구니 메뉴*******");
 						System.out.println("1. 제품 구매");
 						System.out.println("2. 장바구니 비우기");
 						System.out.println("***********************");
 						System.out.print("메뉴 선택 : ");
-						memberMenu = scan.nextInt();
-						
+						int basketMenu = scan.nextInt();
+						switch(basketMenu){
+						case 1 : //제품 구매 
+							break;
+						case 2 : //장바구니 비우기
+							basket.clear();
+							printMessage("장바구니가 비웠습니다");
+							break;
+						default : printMessage("잘못된 메뉴를 선택했습니다");
+						}
 						
 						break;
 					case 3: //구매내역 보기
@@ -637,16 +654,21 @@ public class OnlineshopManager implements ConsoleProgram {
 	//기능2)
 	private void inputTestData() {
 		//제품 데이터
-		List<Option> opt = new ArrayList<Option>();
-		opt.add(new Option("검정", "90", 10));
-		opt.add(new Option("흰색", "90", 0));
-		products.add(new Product("T001", "TOP", "반팔", opt, 5000));
-		products.add(new Product("T002", "TOP", "긴팔", opt, 7000));
+		List<Option> opt1 = new ArrayList<Option>();
+		opt1.add(new Option("검정", "90", 10));
+		opt1.add(new Option("흰색", "90", 0));
+		List<Option> opt2 = new ArrayList<Option>();
+		opt2.add(new Option("검정", "90", 10));
+		products.add(new Product("T001", "TOP", "반팔", opt1, 5000));
+		products.add(new Product("T002", "TOP", "긴팔", opt2, 7000));
 		//장바구니 데이터
 		List<Product> basket = new ArrayList<Product>();
-		List<Option> basketOpt = new ArrayList<Option>();
-		basketOpt.add(new Option("검정", "90", 2));
-		basket.add(new Product("T001", "TOP", "반팔", basketOpt, 10000));
+		List<Option> basketOpt1 = new ArrayList<Option>();
+		basketOpt1.add(new Option("검정", "90", 2));
+		basket.add(new Product("T001", "TOP", "반팔", basketOpt1, 10000));
+		List<Option> basketOpt2 = new ArrayList<Option>();
+		basketOpt2.add(new Option("검정", "90", 2));
+		basket.add(new Product("T002", "TOP", "긴팔", basketOpt2, 14000));
 		//회원 데이터
 		members.add(new Member("abc123", "abc123", "짱구", "010-1234-5678", "MEMBER", basket));
 		members.add(new Member("admin", "1234", "짱아", "010-1234-5679", "ADMIN"));
