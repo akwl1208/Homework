@@ -97,19 +97,79 @@ public class Member {
 class Order{
 	Date orderDate; //주문일
 	String orderCode; //주문번호
-	String receiver, contactNum, delivertyAddr; //수령인, 연락처, 배송지
+	String receiver, contactNum, deliveryAddr; //수령인, 연락처, 배송지
 	List<Product> orderProduct = new ArrayList<Product>(); //주문제품
-	int totalAmount; //총주문금액
-	public Order(String orderCode, Date orderDate, String receiver, String contactNum, String delivertyAddr,
-			List<Product> orderProduct, int totalAmount) {
+	int totalPrice; //총주문금액
+	
+	public Order(String receiver, String contactNum, String deliveryAddr, int totalPrice) {
 		this.orderCode = orderCode;
-		this.orderDate = orderDate;
+		this.orderDate = new Date();
 		this.receiver = receiver;
 		this.contactNum = contactNum;
-		this.delivertyAddr = delivertyAddr;
+		this.deliveryAddr = deliveryAddr;
 		this.orderProduct = orderProduct;
-		this.totalAmount = totalAmount;
+		this.totalPrice = totalPrice;
 	}
+
+	public Date getOrderDate() {
+		return orderDate;
+	}
+
+	public void setOrderDate(Date orderDate) {
+		this.orderDate = orderDate;
+	}
+
+	public String getOrderCode() {
+		return orderCode;
+	}
+
+	public void setOrderCode(String orderCode) {
+		;
+		
+		this.orderCode = orderCode;
+	}
+
+	public String getReceiver() {
+		return receiver;
+	}
+
+	public void setReceiver(String receiver) {
+		this.receiver = receiver;
+	}
+
+	public String getContactNum() {
+		return contactNum;
+	}
+
+	public void setContactNum(String contactNum) {
+		this.contactNum = contactNum;
+	}
+
+	public String getDeliveryAddr() {
+		return deliveryAddr;
+	}
+
+	public void setDeliveryAddr(String deliveryAddr) {
+		this.deliveryAddr = deliveryAddr;
+	}
+
+	public List<Product> getOrderProduct() {
+		return orderProduct;
+	}
+
+	public void setOrderProduct(List<Product> orderProduct) {
+		this.orderProduct = orderProduct;
+	}
+
+	public int getTotalPrice() {
+		return totalPrice;
+	}
+
+	public void setTotalPrice(int totalPrice) {
+		this.totalPrice = totalPrice;
+	}
+	
+	
 	
 	
 }
