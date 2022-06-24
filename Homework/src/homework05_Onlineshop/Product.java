@@ -20,13 +20,7 @@ public class Product {
 	public Product(Product p) {
 		this(p.getCode(), p.getCategory(), p.getName(), p.getOption(), p.getPrice());
 	}//
-	
-	//메소드 : 옵션을 수정하는 
-	public void modifyOption(Option o) {
-		List<Option> tmp = new ArrayList<Option>();
-		tmp.add(o);
-		setOption(tmp);
-	}
+
 
 	public String getCode() {
 		return code;
