@@ -88,6 +88,14 @@ public class Member {
 		this.basket = basket;
 	}
 
+	public List<Order> getOrder() {
+		return order;
+	}
+
+	public void setOrder(List<Order> order) {
+		this.order = order;
+	}//
+
 	@Override
 	public String toString() {
 		return id + "|" + pw + "|" + name + "|" + phoneNum + "|" + clazz;
@@ -101,7 +109,7 @@ class Order{
 	List<Product> orderProduct = new ArrayList<Product>(); //주문제품
 	int totalPrice; //총주문금액
 	
-	public Order(String receiver, String contactNum, String deliveryAddr, int totalPrice) {
+	public Order(String receiver, String contactNum, String deliveryAddr, List<Product> orderProduct, int totalPrice) {
 		this.orderCode = orderCode;
 		this.orderDate = new Date();
 		this.receiver = receiver;
