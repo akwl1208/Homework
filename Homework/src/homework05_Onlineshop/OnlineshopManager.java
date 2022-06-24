@@ -589,22 +589,64 @@ public class OnlineshopManager implements ConsoleProgram {
 						System.out.println("*******장바구니 메뉴*******");
 						System.out.println("1. 제품 구매");
 						System.out.println("2. 장바구니 비우기");
+						System.out.println("3. 메뉴로 돌아가기");
 						System.out.println("***********************");
 						System.out.print("메뉴 선택 : ");
 						int basketMenu = scan.nextInt();
 						switch(basketMenu){
-						case 1 : //제품 구매 
+						case 1 : //제품 구매
+							printMessage("배송 정보를 입력하세요");
+							System.out.print("수령인 : ");
+							String receiver = scan.next();
+							System.out.print("핸드폰 번호 : ");
+							String contactNum = scan.next();
+							scan.nextLine();
+							System.out.print("배송지 주소 : ");
+							String adress = scan.nextLine();
+							while(true){
+								System.out.print("결제하기[y/n] : ");
+								answer = scan.next().charAt(0);
+								if(answer == 'y') {
+									printMessage("결제에 성공했습니다");
+									//회원 구매 내역에 넣기
+									Order o = new Order(receiver,contactNum,adress, basket, totalPrice);
+									m.getOrder().add(o);
+								}else if(answer != 'n') {
+									printMessage("y나 n을 입력하세요");
+									continue;
+								}
+								break;
+							}//while 결제하기					
 							break;
 						case 2 : //장바구니 비우기
+							//물품 돌려주기
+							for(Product tmpBasket : m.getBasket()) {
+								for(Product tmpProduct : products) {
+									//장바구니의 코드와 제품의 코드가 같다면
+									if(tmpBasket.getCode().equals(tmpProduct.getCode())) {
+										for(Option tmpOption : tmpProduct.getOption()) {
+											//옵션의 색상과 사이즈가 같다면
+											if(tmpBasket.getOption().get(0).getColor().equals(tmpOption.getColor())
+												&& tmpBasket.getOption().get(0).getSize().equals(tmpOption.getSize())){
+												//수량 돌려주기
+												tmpOption.setAmount(tmpOption.getAmount() + tmpBasket.getOption().get(0).getAmount());
+											}//if 색상 사이즈
+										}//for tmpOption
+									}//if 코드
+								}//for tmpProduct
+							}//for tmpBasket
 							basket.clear();
 							printMessage("장바구니가 비웠습니다");
 							break;
+						case 3 : break; //메뉴로 돌아가기 
 						default : printMessage("잘못된 메뉴를 선택했습니다");
 						}
 						
 						break;
 					case 3: //구매내역 보기
-				
+						for(Order order : m.getOrder()) {
+							System.out.println(order);
+						}
 						break;
 					case 4: //로그아웃
 						printMessage("로그아웃됩니다"); break;
