@@ -626,10 +626,11 @@ public class OnlineshopManager implements ConsoleProgram {
 									if(tmpBasket.getCode().equals(tmpProduct.getCode())) {
 										for(Option tmpOption : tmpProduct.getOption()) {
 											//옵션의 색상과 사이즈가 같다면
-											if(tmpBasket.getOption().get(0).getColor().equals(tmpOption.getColor())
-												&& tmpBasket.getOption().get(0).getSize().equals(tmpOption.getSize())){
-												//수량 돌려주기
-												tmpOption.setAmount(tmpOption.getAmount() + tmpBasket.getOption().get(0).getAmount());
+											Option tbOption = tmpBasket.getOption().get(0); //바구니에 담긴 제품의 옵션
+											if(tbOption.getColor().equals(tmpOption.getColor())
+												&& tbOption.getSize().equals(tmpOption.getSize())){
+												//장바구니에 담긴 수량 돌려주기
+												tmpOption.setAmount(tmpOption.getAmount() + tbOption.getAmount());
 											}//if 색상 사이즈
 										}//for tmpOption
 									}//if 코드
@@ -641,11 +642,24 @@ public class OnlineshopManager implements ConsoleProgram {
 						case 3 : break; //메뉴로 돌아가기 
 						default : printMessage("잘못된 메뉴를 선택했습니다");
 						}
-						
 						break;
 					case 3: //구매내역 보기
 						for(Order order : m.getOrder()) {
-							System.out.println(order);
+							System.out.println("***********************");
+							System.out.println("주문번호 : " + order.getOrderCode());
+							System.out.println("주문날짜 : " + order.getOrderDate());
+							System.out.println("-----------------------");
+							System.out.println("수령인 : " + order.getReceiver());
+							System.out.println("연락처 : " + order.getContactNum());
+							System.out.println("배송지 : " + order.getDeliveryAddr());
+							System.out.println("-----------------------");
+							System.out.println("[주문내역]");
+							for(Product orderList : order.getOrderProduct()) {
+								System.out.println(orderList.getName() + " | " + orderList.getOption() + " | " + orderList.getPrice());
+							}
+							System.out.println("-----------------------");
+							System.out.println(order.getTotalPrice());
+							System.out.println("***********************");
 						}
 						break;
 					case 4: //로그아웃
