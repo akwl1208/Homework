@@ -1,5 +1,6 @@
 package homework05_Onlineshop;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Member {
@@ -110,8 +111,10 @@ class Order{
 	int totalPrice; //총주문금액
 	
 	public Order(String receiver, String contactNum, String deliveryAddr, List<Product> orderProduct, int totalPrice) {
-		this.orderCode = orderCode;
 		this.orderDate = new Date();
+		SimpleDateFormat format = new SimpleDateFormat("yyMMddhhmmss");
+		String code = "M" + format.format(orderDate);
+		this.orderCode = code;		
 		this.receiver = receiver;
 		this.contactNum = contactNum;
 		this.deliveryAddr = deliveryAddr;
@@ -119,8 +122,12 @@ class Order{
 		this.totalPrice = totalPrice;
 	}
 
-	public Date getOrderDate() {
-		return orderDate;
+	public String getOrderDate() {
+		if(orderDate == null) {
+			return null;
+		}
+		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+		return format.format(orderDate);	
 	}
 
 	public void setOrderDate(Date orderDate) {
@@ -132,8 +139,6 @@ class Order{
 	}
 
 	public void setOrderCode(String orderCode) {
-		;
-		
 		this.orderCode = orderCode;
 	}
 
