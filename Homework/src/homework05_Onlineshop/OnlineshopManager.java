@@ -414,6 +414,31 @@ public class OnlineshopManager implements ConsoleProgram {
 						}
 						break;
 					case 5: //주문 내역 확인
+						for(Member tmpMember : members) {
+							//관리자인 경우 출력 안되게
+							if(tmpMember.getClazz().equals("ADMIN")) {
+								continue;
+							}
+							System.out.println("***********************");
+							System.out.println("[" + tmpMember.getId() + "]");
+							for(Order order : tmpMember.getOrder()) {
+								System.out.println("***********************");
+								System.out.println("주문번호 : " + order.getOrderCode());
+								System.out.println("주문날짜 : " + order.getOrderDate());
+								System.out.println("-----------------------");
+								System.out.println("수령인 : " + order.getReceiver());
+								System.out.println("연락처 : " + order.getContactNum());
+								System.out.println("배송지 : " + order.getDeliveryAddr());
+								System.out.println("-----------------------");
+								System.out.println("[주문내역]");
+								for(Product orderList : order.getOrderProduct()) {
+									System.out.println(orderList.getName() + " | " + orderList.getOption() + " | " + orderList.getPrice());
+								}
+								System.out.println("-----------------------");
+								System.out.println(order.getTotalPrice());
+								System.out.println("***********************");
+							}
+						}
 						break;
 					case 6: printMessage("로그아웃됩니다"); break;
 					case 7: break;
@@ -598,8 +623,16 @@ public class OnlineshopManager implements ConsoleProgram {
 							printMessage("배송 정보를 입력하세요");
 							System.out.print("수령인 : ");
 							String receiver = scan.next();
-							System.out.print("핸드폰 번호 : ");
-							String contactNum = scan.next();
+							String contactNum;
+							while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
+								System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
+								contactNum = scan.next();
+								if(!Pattern.matches("(010)-\\d{4}-\\d{4}", contactNum)) {
+									printMessage("010-xxxx-xxxx 로 입력해주세요");
+									continue;
+								}
+								break;
+							}//while 전화번호 입력	
 							scan.nextLine();
 							System.out.print("배송지 주소 : ");
 							String adress = scan.nextLine();
@@ -673,11 +706,148 @@ public class OnlineshopManager implements ConsoleProgram {
 			}
 			
 			break;		
-		case 3: 
-			for(Member tmp : members) {
-				System.out.println(tmp);
-			}
+		case 3: //아이디 찾기, 비밀번호 찾기
+			System.out.println("**************8********");
+			System.out.println("1. 아이디 찾기");
+			System.out.println("2. 비밀번호 찾기");
+			System.out.println("***********************");
+			System.out.print("메뉴 선택 : ");
+			int findMenu = scan.nextInt();
+			switch(findMenu){
+			case 1 : //아이디 찾기
+				//이름과 핸드폰번호 입력
+				System.out.print("이름 : ");
+				String name = scan.next();
+				String phoneNum;
+				while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
+					System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
+					phoneNum = scan.next();
+					if(!Pattern.matches("(010)-\\d{4}-\\d{4}", phoneNum)) {
+						printMessage("010-xxxx-xxxx 로 입력해주세요");
+						continue;
+					}
+					break;
+				}//while 전화번호 입력				
+				//이름과 전화번호가 일치하는 회원이 있으면 본인인증으로 넘어가기
+				int n; count = 0;
+				for(n = 0; n < members.size(); n++) {
+					if(name.equals(members.get(n).getName()) && phoneNum.equals(members.get(n).getPhoneNum())) { 
+						count++;
+						break;
+					}
+				}
+				if(count == 0){ //count가 0이면 회원가입이 안되어 있음
+					printMessage("없는 회원입니다. 회원가입해주세요");
+					break;
+				}	
+				//일치하는 번호가 없으면 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
+				//번호 확인이 틀리면 새로운 인증번호가 감 -> 총 3번 -> 3번 모두 틀리면 메뉴로 돌아감 
+				int z;
+				for(z = 1; z <= 3; z++) {
+					String verification = "";
+					for(int x = 0; x < 4; x++) { //4자리 수 생성
+						int r = (int)(Math.random()*10);//0~9사이의 랜덤수 생성
+						verification += Integer.toString(r);
+					}
+					printMessage("본인인증번호 : " + verification); //인증번호가 문자로 도착
+					System.out.print("본인인증번호 입력 : ");
+					String veriCheck = scan.next();
+					//문자로 받은 본인인증번호와 입력한 번호가 일치하면 본인인증 성공
+					if(veriCheck.equals(verification)) {
+						printMessage("본인인증에 성공했습니다");
+						break;
+					}
+					printMessage("본인인증번호와 일치하지 않습니다.");
+				}				
+				//본인인증 3번 실패 시 메뉴로 돌아감
+				if(z == 4) { //z가 4면 본인인증 실패
+					printMessage("본인인증에 실패했습니다. 메뉴로 돌아갑니다");
+					break;
+				}
+				//아이디 뒤에 3글자는 알려주지 않기
+				System.out.print("회원님의 아이디는 [");
+				String findId = members.get(n).getId();
+				for(int f = 0; f < findId.length()-3; f++) {
+					System.out.print(findId.charAt(f));
+				}
+				for(int f = findId.length()-3; f < findId.length(); f++) {
+					System.out.print("*");
+				}
+				System.out.print("]입니다");
+				System.out.println();
+				break;
+				
+			case 2 : //비밀번호 찾기 -> 새로운 비밀번호 입력
+				//이름과 핸드폰번호 입력
+				System.out.print("이름 : ");
+				name = scan.next();
+				while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
+					System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
+					phoneNum = scan.next();
+					if(!Pattern.matches("(010)-\\d{4}-\\d{4}", phoneNum)) {
+						printMessage("010-xxxx-xxxx 로 입력해주세요");
+						continue;
+					}
+					break;
+				}//while 전화번호 입력	
+				System.out.print("아이디 : ");
+				id = scan.next();
+				//아이디와 전화번호가 일치하는 회원이 있으면 본인인증으로 넘어가기
+				count = 0;
+				for(n = 0; n < members.size(); n++) {
+					if(id.equals(members.get(n).getId()) && phoneNum.equals(members.get(n).getPhoneNum())) { 
+						count++;
+						break;
+					}
+				}
+				if(count == 0){ //count가 0이면 회원가입이 안되어 있음
+					printMessage("없는 회원입니다. 회원가입해주세요");
+					break;
+				}	
+				//일치하는 번호가 없으면 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
+				//번호 확인이 틀리면 새로운 인증번호가 감 -> 총 3번 -> 3번 모두 틀리면 메뉴로 돌아감 
+				for(z = 1; z <= 3; z++) {
+					String verification = "";
+					for(int x = 0; x < 4; x++) { //4자리 수 생성
+						int r = (int)(Math.random()*10);//0~9사이의 랜덤수 생성
+						verification += Integer.toString(r);
+					}
+					printMessage("본인인증번호 : " + verification); //인증번호가 문자로 도착
+					System.out.print("본인인증번호 입력 : ");
+					String veriCheck = scan.next();
+					//문자로 받은 본인인증번호와 입력한 번호가 일치하면 본인인증 성공
+					if(veriCheck.equals(verification)) {
+						printMessage("본인인증에 성공했습니다");
+						break;
+					}
+					printMessage("본인인증번호와 일치하지 않습니다.");
+				}				
+				//본인인증 3번 실패 시 메뉴로 돌아감
+				if(z == 4) { //z가 4면 본인인증 실패
+					printMessage("본인인증에 실패했습니다. 메뉴로 돌아갑니다");
+					break;
+				}
+				//본인인증에 성공하면 새로운 비밀번호를 입력한다
+				while(true) {
+					System.out.print("새로운 비밀번호 : ");
+					pw = scan.next();
+					System.out.print("비밀번호 확인 : ");
+					String pwCheck = scan.next();
+					//비밀번호 중복 확인
+					if(!pwCheck.equals(pw)) {
+						printMessage("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+						continue;
+					}	
+					break;
+				}//while 비밀번호 질문
+				//회원의 비밀번호 수정
+				members.get(n).setPw(pw);
+				printMessage("비빌번호가 수정되었습니다. 로그인해보세요");
 			
+				break;
+			default: printMessage("메뉴를 잘못 선택했습니다");
+			}
+
 			break;		
 		default:	
 		}
