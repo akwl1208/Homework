@@ -42,81 +42,20 @@ public class OnlineshopManager implements ConsoleProgram {
 			answer = scan.next().charAt(0);
 			switch(answer) {
 			case 'Y', 'y':
-				//이름과 핸드폰번호 입력
-				System.out.print("이름 : ");
-				String name = scan.next();
-				String phoneNum;
-				while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
-					System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
-					phoneNum = scan.next();
-					if(!Pattern.matches("(010)-\\d{4}-\\d{4}", phoneNum)) {
-						printMessage("010-xxxx-xxxx 로 입력해주세요");
-						continue;
-					}
-					break;
-				}//while 전화번호 입력				
-				//회원정보 중 핸드폰 번호가 같은 회원이 있으면 이미 회원가입되어 있다고 알려주기
-				int count = 0;
-				for(Member tmp : members) {
-					if(phoneNum.equals(tmp.getPhoneNum()))
-						count++;
-				}
-				if(count == 1){ //count가 1이면 이미 등록된 회원
+				//이름과 핸드폰번호 입력하면 회원정보가 있는지 확인		
+				String name, phoneNum;
+				if(isMember()){
 					printMessage("이미 회원가입되어 있습니다. 메뉴에서 아이디/비밀번호 찾기를 해주세요");
 					break;
 				}	
-				//일치하는 번호가 없으면 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
-				//번호 확인이 틀리면 새로운 인증번호가 감 -> 총 3번 -> 3번 모두 틀리면 메뉴로 돌아감 
-				int i;
-				for(i = 1; i <= 3; i++) {
-					String verification = "";
-					for(int j = 0; j < 4; j++) { //4자리 수 생성
-						int r = (int)(Math.random()*10);//0~9사이의 랜덤수 생성
-						verification += Integer.toString(r);
-					}
-					printMessage("본인인증번호 : " + verification); //인증번호가 문자로 도착
-					System.out.print("본인인증번호 입력 : ");
-					String veriCheck = scan.next();
-					//문자로 받은 본인인증번호와 입력한 번호가 일치하면 본인인증 성공
-					if(veriCheck.equals(verification)) {
-						printMessage("본인인증에 성공했습니다");
-						break;
-					}
-					printMessage("본인인증번호와 일치하지 않습니다.");
-				}				
+				//회원정보가 없으면 본인인증			
 				//본인인증 3번 실패 시 메뉴로 돌아감
-				if(i == 4) { //i가 4면 본인인증 실패
+				if(!selfVerification()) {
 					printMessage("본인인증에 실패했습니다. 메뉴로 돌아갑니다");
 					break;
 				}		
-				//아이디 입력하면 중복확인 후 중복되지 않고 아이디가 3글자 이상 12글자 이하이면 비밀번호 입력
-				printMessage("3이상 12이하 글자수로 영문과 숫자를 조합하여 아이디를 만들어주세요");
-				String id;
-				while(true) {
-					System.out.print("아이디 : ");
-					id = scan.next();
-					//아이디 중복 확인
-					count = 0;
-					for(Member tmp : members) {
-						if(id.equals(tmp.getId()))
-							count++;
-					}
-					if(count == 1){ //count가 1이면 있는 아이디
-						printMessage("중복된 아이디입니다. 다른 아이디를 만들어주세요");
-						continue;
-					}
-					//아이디 글자수가 3글자 이상 12글자 이하인지 확인 -> 아니면 다시 아이디 입력
-					if(id.length() < 3 || id.length() > 12) {
-						printMessage("3글자 이상 12글자 이하로 아이디를 만들어주세요");
-						continue;
-					}
-					//영문과 숫자로만 썼는지
-					if(!Pattern.matches("\\w+", id)) {
-						printMessage("알파벳(a-zA-Z)과 숫자(0-9)만 사용해주세요");
-					}
-					printMessage("사용가능한 아이디입니다"); //중복도 아니고 아이디 글자수 조건도 통과
-					break;
-				}//while 아이디 
+				//아이디 입력하면 유효성 검사를 통하면 다음 단계로 -> 유효성 검사에 맞는 데이터를 입력할 때까지 반복
+				idValidation();
 				//비밀번호와 비밀번호 확인을 입력하고 일치하면 회원가입 성공
 				String pw;
 				while(true) {
@@ -877,7 +816,7 @@ public class OnlineshopManager implements ConsoleProgram {
 		System.out.println("***********************");
 	}//printMessage
 	
-	//기능2)
+	//기능2) 샘플데이터
 	private void inputTestData() {
 		//제품 데이터
 		List<Option> opt1 = new ArrayList<Option>();
@@ -900,4 +839,85 @@ public class OnlineshopManager implements ConsoleProgram {
 		members.add(new Member("admin", "1234", "짱아", "010-1234-5679", "ADMIN"));
 	
 	}//inputTestData
+	
+	//기능3) 이름과 전화번호를 입력하면 회원인지 아닌지 확인
+	private boolean isMember() {
+		//이름과 핸드폰번호 입력
+		System.out.print("이름 : ");
+		String name = scan.next();
+		String phoneNum;
+		while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
+			System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
+			phoneNum = scan.next();
+			if(!Pattern.matches("(010)-\\d{4}-\\d{4}", phoneNum)) {
+				printMessage("010-xxxx-xxxx 로 입력해주세요");
+				continue;
+			}
+			break;
+		}//while 전화번호 입력				
+		//회원정보 중 핸드폰 번호가 같은 회원이 있으면 이미 회원가입되어 있다고 알려주기
+		int count = 0;
+		for(Member tmp : members) {
+			if(phoneNum.equals(tmp.getPhoneNum()))
+				count++;
+		}
+		if(count == 1){ //count가 1이면 이미 등록된 회원
+			return true;
+		}
+		return false;
+	}//isMember
+	
+	//기능4) 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
+		//번호 확인이 틀리면 새로운 인증번호가 감 -> 총 3번 -> 3번 모두 틀리면 본인인증 실패
+	private boolean selfVerification() {
+		for(int i = 1; i <= 3; i++) {
+			String verification = "";
+			for(int j = 0; j < 4; j++) { //4자리 수 생성
+				int r = (int)(Math.random()*10);//0~9사이의 랜덤수 생성
+				verification += Integer.toString(r);
+			}
+			printMessage("본인인증번호 : " + verification); //인증번호가 문자로 도착
+			System.out.print("본인인증번호 입력 : ");
+			String veriCheck = scan.next();
+			//문자로 받은 본인인증번호와 입력한 번호가 일치하면 본인인증 성공
+			if(veriCheck.equals(verification)) {
+				printMessage("본인인증에 성공했습니다");
+				return true;
+			}
+			printMessage("본인인증번호와 일치하지 않습니다.");
+		}				
+		return false;
+	}//selfVerification
+	
+	//기능5) 아이디를 입력하면 유효성 검사함
+	private void idValidation() {
+		//아이디 입력하면 중복확인 후 중복되지 않고 아이디가 3글자 이상 12글자 이하이면 비밀번호 입력
+		printMessage("3이상 12이하 글자수로 영문과 숫자를 조합하여 아이디를 만들어주세요");
+		while(true) {
+			System.out.print("아이디 : ");
+			String id = scan.next();
+			//아이디 중복 확인
+			int count = 0;
+			for(Member tmp : members) {
+				if(id.equals(tmp.getId()))
+					count++;
+			}
+			if(count == 1){ //count가 1이면 있는 아이디
+				printMessage("중복된 아이디입니다. 다른 아이디를 만들어주세요");
+				continue;
+			}
+			//아이디 글자수가 3글자 이상 12글자 이하인지 확인 -> 아니면 다시 아이디 입력
+			if(id.length() < 3 || id.length() > 12) {
+				printMessage("3글자 이상 12글자 이하로 아이디를 만들어주세요");
+				continue;
+			}
+			//영문과 숫자로만 썼는지
+			if(!Pattern.matches("\\w+", id)) {
+				printMessage("알파벳(a-zA-Z)과 숫자(0-9)만 사용해주세요");
+				continue;
+			}
+			printMessage("사용가능한 아이디입니다"); //중복도 아니고 아이디 글자수 조건도 통과
+			break;
+		}//while 아이디 
+	}//idValidation
 }
