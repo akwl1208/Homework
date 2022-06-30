@@ -43,8 +43,10 @@ public class OnlineshopManager implements ConsoleProgram {
 			switch(answer) {
 			case 'Y', 'y':
 				//이름과 핸드폰번호 입력하면 회원정보가 있는지 확인		
-				String name, phoneNum;
-				if(isMember()){
+				System.out.print("이름 : ");
+				String name = scan.next();
+				String phoneNum = inputPhoneNum();
+				if(isMember(phoneNum) == 1){
 					printMessage("이미 회원가입되어 있습니다. 메뉴에서 아이디/비밀번호 찾기를 해주세요");
 					break;
 				}	
@@ -55,24 +57,15 @@ public class OnlineshopManager implements ConsoleProgram {
 					break;
 				}		
 				//아이디 입력하면 유효성 검사를 통하면 다음 단계로 -> 유효성 검사에 맞는 데이터를 입력할 때까지 반복
-				idValidation();
-				//비밀번호와 비밀번호 확인을 입력하고 일치하면 회원가입 성공
-				String pw;
-				while(true) {
-					System.out.print("비밀번호 : ");
-					pw = scan.next();
-					System.out.print("비밀번호 확인 : ");
-					String pwCheck = scan.next();
-					//비밀번호 중복 확인
-					if(!pwCheck.equals(pw)) {
-						printMessage("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
-						continue;
-					}	
-					break;
-				}//while 비밀번호 질문
+				String id = inputId();
+				//비밀번호와 비밀번호 확인을 입력
+				String pw = inputPw();
+				//일치하면 회원가입 성공
 				members.add(new Member(name, phoneNum, id, pw, "MEMBER"));
-				printMessage("회원가입이 완료되었습니다");
-				
+				printMessage("회원가입이 완료되었습니다");		
+				for(Member tmp: members){
+					System.out.println(tmp);
+				}
 				break;
 			case 'N', 'n':
 				printMessage("비동의시 회원가입할 수 없습니다. 메뉴로 돌아갑니다");
@@ -840,11 +833,19 @@ public class OnlineshopManager implements ConsoleProgram {
 	
 	}//inputTestData
 	
-	//기능3) 이름과 전화번호를 입력하면 회원인지 아닌지 확인
-	private boolean isMember() {
-		//이름과 핸드폰번호 입력
-		System.out.print("이름 : ");
-		String name = scan.next();
+	//기능3) 전화번호를 입력받아 회원인지 아닌지 확인하고 count를 돌려줌
+	private int isMember(String phoneNum) {
+		//회원정보 중 핸드폰 번호가 같은 회원이 있으면 이미 회원가입되어 있다고 알려주기
+		int count = 0;
+		for(Member tmp : members) {
+			if(phoneNum.equals(tmp.getPhoneNum()))
+				count++;
+		}
+		return count;		
+	}//isMember
+	
+	//기능4) 전화번호 입력하고 유효성 검사해서 전화번호를 돌려줌
+	private String inputPhoneNum() {
 		String phoneNum;
 		while(true) { //형식에 맞지 않게 입력한 경우 다시 입력하기
 			System.out.print("핸드폰 번호[예) 010-1234-5678] : ");
@@ -855,19 +856,10 @@ public class OnlineshopManager implements ConsoleProgram {
 			}
 			break;
 		}//while 전화번호 입력				
-		//회원정보 중 핸드폰 번호가 같은 회원이 있으면 이미 회원가입되어 있다고 알려주기
-		int count = 0;
-		for(Member tmp : members) {
-			if(phoneNum.equals(tmp.getPhoneNum()))
-				count++;
-		}
-		if(count == 1){ //count가 1이면 이미 등록된 회원
-			return true;
-		}
-		return false;
-	}//isMember
+		return phoneNum;
+	}//inputPhoneNum
 	
-	//기능4) 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
+	//기능5) 휴대폰 번호로 4자리 숫자(0000~9999)본인인증 메세지 전송됨
 		//번호 확인이 틀리면 새로운 인증번호가 감 -> 총 3번 -> 3번 모두 틀리면 본인인증 실패
 	private boolean selfVerification() {
 		for(int i = 1; i <= 3; i++) {
@@ -889,13 +881,14 @@ public class OnlineshopManager implements ConsoleProgram {
 		return false;
 	}//selfVerification
 	
-	//기능5) 아이디를 입력하면 유효성 검사함
-	private void idValidation() {
+	//기능6) 아이디를 입력하면 유효성 검사하고 아이디 돌려줌
+	private String inputId() {
 		//아이디 입력하면 중복확인 후 중복되지 않고 아이디가 3글자 이상 12글자 이하이면 비밀번호 입력
 		printMessage("3이상 12이하 글자수로 영문과 숫자를 조합하여 아이디를 만들어주세요");
+		String id;
 		while(true) {
 			System.out.print("아이디 : ");
-			String id = scan.next();
+			id = scan.next();
 			//아이디 중복 확인
 			int count = 0;
 			for(Member tmp : members) {
@@ -919,5 +912,24 @@ public class OnlineshopManager implements ConsoleProgram {
 			printMessage("사용가능한 아이디입니다"); //중복도 아니고 아이디 글자수 조건도 통과
 			break;
 		}//while 아이디 
+		return id;
 	}//idValidation
+	
+	//기능7) 비밀번호와 비밀번호 확인을 입력하면 일치하는지 확인하고 비밀번호 돌려줌
+	private String inputPw() {
+		String pw;
+		while(true) {
+			System.out.print("비밀번호 : ");
+			pw = scan.next();
+			System.out.print("비밀번호 확인 : ");
+			String pwCheck = scan.next();
+			//비밀번호 중복 확인
+			if(!pwCheck.equals(pw)) {
+				printMessage("비밀번호가 일치하지 않습니다. 다시 입력해주세요");
+				continue;
+			}	
+			break;
+		}//while 비밀번호 질문
+		return pw;
+	}//inputPw
 }
